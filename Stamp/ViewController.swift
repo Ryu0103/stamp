@@ -42,14 +42,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate,UINaviga
         
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-        let touch: UITouch = touches.first as! UITouch
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let touch: UITouch = touches.first as UITouch!
         let location: CGPoint = touch.locationInView(self.view)
         if imageIndex != 0{
 //            imageView = UIImageView(frame: CGRecttMake(0,0,40,40))
             imageView = UIImageView(frame: CGRectMake(0, 0, 40, 40))
             
-            var image: UIImage = UIImage(named: imageNameArray[imageIndex - 1])!
+            let image: UIImage = UIImage(named: imageNameArray[imageIndex - 1])!
             imageView.image = image
             imageView.center = CGPointMake(location.x, location.y)
             self.view.addSubview(imageView)
@@ -65,46 +65,53 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate,UINaviga
     }
     
     @IBAction func selectBackground() {
-        var imagePickerController: UIImagePickerController = UIImagePickerController()
+        let imagePickerController: UIImagePickerController = UIImagePickerController()
         
         imagePickerController.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        imagePickerController
-        imagePickerController
+        imagePickerController.delegate = self
+        imagePickerController.allowsEditing = true
+        
+        self.presentViewController(imagePickerController,animated: true, completion:
+        nil)
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        
+        var image: UIImage = info[UIImagePickerControllerEditedImage] as! UIImage
+        
+        haikeiImageView.image = image
+        
+        picker.dismissViewControllerAnimated(true,completion: nil)
+
     }
     
     
+  
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+//@IBAction func save() {
+//    let rect: CGRect = CGRectMake(0,30,320,380)
+//    UIGraphicsBeginImageContext(rect.size)
+//    self.view.layer.renderInCotex(UIGraphicsGetCurrentContext())
+//    let capture = UIGraphicsGetImageFromCurrentImageContext()
+//    UIGraphicsEndImageContext()
+//    UIImageWriteToSavedPhotosAlbum(capture,nil,nil,nil)
+//}
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
+@IBAction func save() {
+    let rect: CGRect = CGRectMake(0,30,320,380)
+    UIGraphicsBeginImageContext(rect.size)
+    self.view.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+    let capture = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    UIImageWriteToSavedPhotosAlbum(capture,nil,nil,nil)
+}
 
 
 }
